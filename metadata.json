@@ -1,0 +1,5 @@
+{
+  "name": "Consoulium Admin",
+  "description": "Admin dashboard for managing Consoulium Festival news, results, and events.",
+  "requestFramePermissions": []
+}
