@@ -375,7 +375,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-brand-charcoal/60 backdrop-blur-md border border-brand-light/20 flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300">
                             <img
                                 className="w-full h-full object-contain p-4"
-                                src="dist/image/logo/logo-new.png"
+                                src="consoul/dist/image/logo/logo-new.png"
                                 alt="Company Logo"
                             />
                         </div>
