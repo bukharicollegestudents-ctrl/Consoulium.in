@@ -40,9 +40,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
     const juniorTop = teams.filter(t => t.category === 'Junior').sort((a, b) => b.points - a.points).slice(0, 3);
 
     const heroVideos = [
-        "/dist/video/highlites 1.mp4",
-        "/dist/video/highlites_2.mp4",
-        "/dist/video/highlites_3.mp4"
+        "/video/highlites 1.mp4",
+        "/video/highlites_2.mp4",
+        "/video/highlites_3.mp4"
     ];
 
     // --- EFFECTS & ANIMATIONS ---
@@ -375,7 +375,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-brand-charcoal/60 backdrop-blur-md border border-brand-light/20 flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300">
                             <img
                                 className="w-full h-full object-contain p-4"
-                                src="consoul/dist/image/logo/logo-new.png"
+                                src="/public/image/logo/logo-new.png"
                                 alt="Company Logo"
                             />
                         </div>
@@ -638,7 +638,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="bg-brand-charcoal border border-brand-light/10 p-8 rounded-[2rem] flex flex-col justify-between h-full min-h-[300px] hover:-translate-y-2 transition-transform duration-300 hover:border-brand-pink/30">
                             <p className="text-lg leading-relaxed mb-8 font-medium text-brand-light/80">"Consoulium has become an integral part of our institution's vision for holistic education, bridging tradition and modernity."</p>
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/dist/image/profiles/THENNALA USTHAD.jpg" alt="Principal" className="w-full h-full object-cover" /></div>
+                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/image/profiles/thennala-usthad.jpg" alt="Principal" className="w-full h-full object-cover" /></div>
                                 <div><h4 className="font-bold text-base text-brand-light">Aboohaneefal Faizy Thennala</h4><span className="text-xs text-brand-light/50 uppercase tracking-wide">Principal</span></div>
                             </div>
                         </div>
@@ -646,7 +646,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="bg-brand-charcoal border border-brand-light/10 p-8 rounded-[2rem] flex flex-col justify-between h-full min-h-[300px] hover:-translate-y-2 transition-transform duration-300 hover:border-brand-pink/30">
                             <p className="text-lg leading-relaxed mb-8 font-medium text-brand-light/80">"This festival has enhanced student development, especially in public speaking and critical thinking."</p>
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/dist/image/profiles/Dr. V Abdul Latheef.jpeg" alt="Head" className="w-full h-full object-cover" /></div>
+                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/image/profiles/dr-abdul-latheef.jpeg" alt="Head" className="w-full h-full object-cover" /></div>
                                 <div><h4 className="font-bold text-base text-brand-light">Dr. V Abdul Latheef</h4><span className="text-xs text-brand-light/50 uppercase tracking-wide">Academic Head</span></div>
                             </div>
                         </div>
@@ -654,7 +654,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="bg-brand-charcoal border border-brand-light/10 p-8 rounded-[2rem] flex flex-col justify-between h-full min-h-[300px] hover:-translate-y-2 transition-transform duration-300 hover:border-brand-pink/30">
                             <p className="text-lg leading-relaxed mb-8 font-medium text-brand-light/80">"I am impressed by how Consoulium has created a platform for students to express themselves."</p>
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/dist/image/profiles/farooq ust.jpg" alt="Alumni" className="w-full h-full object-cover" /></div>
+                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/image/profiles/farooq-ust.jpg" alt="Alumni" className="w-full h-full object-cover" /></div>
                                 <div><h4 className="font-bold text-base text-brand-light">Dr. PA Muhammed Farooq</h4><span className="text-xs text-brand-light/50 uppercase tracking-wide">Alumni</span></div>
                             </div>
                         </div>
@@ -662,7 +662,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="bg-brand-charcoal border border-brand-light/10 p-8 rounded-[2rem] flex flex-col justify-between h-full min-h-[300px] hover:-translate-y-2 transition-transform duration-300 hover:border-brand-pink/30">
                             <p className="text-lg leading-relaxed mb-8 font-medium text-brand-light/80">"The program has not only honed our students' academic abilities but also cultivated their ethical reasoning."</p>
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/dist/image/profiles/OLAVATTUR USTHAD.jpg" alt="Vice" className="w-full h-full object-cover" /></div>
+                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/image/profiles/olavattur-usthad.jpg" alt="Vice" className="w-full h-full object-cover" /></div>
                                 <div><h4 className="font-bold text-base text-brand-light">Abdul Naswir Ahsani</h4><span className="text-xs text-brand-light/50 uppercase tracking-wide">Vice Principal</span></div>
                             </div>
                         </div>
