@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NewsItem } from '../types';
 import { Plus, Calendar, X, LayoutList, PartyPopper, Upload, Image as ImageIcon, Trash2 } from 'lucide-react';
-import { db, ref, set, remove } from '../firebase';
+import { db, ref, set, remove, onValue } from '../firebase';
 
 interface NewsManagerProps {
     news: NewsItem[];
@@ -41,17 +41,9 @@ const NewsManager: React.FC<NewsManagerProps> = ({ news, setNews }) => {
         setShowForm(true);
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setNewItem({ ...newItem, imageUrl: reader.result as string });
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
+    // New workflow: images are managed manually by the admin.
+    // Admins must upload images to `files/news/` in the project root
+    // and then enter the image path (e.g. `files/news/your_image.jpg`) below.
     const removeImage = () => {
         setNewItem({ ...newItem, imageUrl: '' });
     };
@@ -60,8 +52,9 @@ const NewsManager: React.FC<NewsManagerProps> = ({ news, setNews }) => {
         e.preventDefault();
         const id = Date.now().toString();
         
-        // If no image uploaded, use a default placeholder
-        const finalImage = newItem.imageUrl || 'https://picsum.photos/600/400';
+        // The system no longer auto-uploads or auto-features images.
+        // Use the provided image path as-is (admins should place files in `files/news`).
+        const finalImage = newItem.imageUrl || '';
 
         const item: NewsItem = {
             id: id,
@@ -69,11 +62,16 @@ const NewsManager: React.FC<NewsManagerProps> = ({ news, setNews }) => {
             category: newItem.category as any,
             description: newItem.description || '',
             imageUrl: finalImage,
-            date: new Date().toLocaleDateString()
+            date: new Date().toISOString()
         };
         
-        set(ref(db, 'news/' + id), item)
+        // For IndexedDB, we need to get all news items, update the specific one, and save back
+        const updatedNews = [...news, item];
+        const newsRef = ref(db, 'news');
+        set(newsRef, updatedNews)
             .then(() => {
+                // Update local state to show new item immediately
+                setNews(updatedNews);
                 setShowForm(false);
             })
             .catch((error) => {
@@ -84,7 +82,13 @@ const NewsManager: React.FC<NewsManagerProps> = ({ news, setNews }) => {
 
     const handleDelete = (id: string) => {
         if (confirm('Delete this item?')) {
-            remove(ref(db, 'news/' + id))
+            const updatedNews = news.filter(item => item.id !== id);
+            const newsRef = ref(db, 'news');
+            set(newsRef, updatedNews)
+                .then(() => {
+                    // Update local state to remove item immediately
+                    setNews(updatedNews);
+                })
                 .catch(error => {
                     console.error("Error deleting item:", error);
                     alert("Failed to delete item");
@@ -176,36 +180,17 @@ const NewsManager: React.FC<NewsManagerProps> = ({ news, setNews }) => {
                                         )}
                                     </select>
                                 </div>
-                                
+
                                 <div>
-                                    <label className="block text-sm text-brand-light/60 mb-1">Cover Image</label>
-                                    {newItem.imageUrl ? (
-                                        <div className="relative w-full h-48 rounded-lg overflow-hidden border border-brand-light/10 group">
-                                            <img src={newItem.imageUrl} alt="Preview" className="w-full h-full object-cover" />
-                                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button 
-                                                    type="button" 
-                                                    onClick={removeImage}
-                                                    className="bg-brand-pink text-brand-charcoal px-4 py-2 rounded-lg font-bold flex items-center gap-2 hover:scale-105 transition-transform"
-                                                >
-                                                    <Trash2 size={16} /> Remove Image
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="w-full h-32 border-2 border-dashed border-brand-light/10 rounded-lg bg-brand-dark/30 hover:bg-brand-dark/50 hover:border-brand-teal/50 transition-all relative group">
-                                            <input 
-                                                type="file" 
-                                                accept="image/*"
-                                                onChange={handleImageUpload}
-                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                            />
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center text-brand-light/40 group-hover:text-brand-teal transition-colors pointer-events-none">
-                                                <Upload size={24} className="mb-2" />
-                                                <span className="text-sm font-medium">Click to upload photo</span>
-                                            </div>
-                                        </div>
-                                    )}
+                                    <label className="block text-sm text-brand-light/60 mb-1">Cover Image Path (manual)</label>
+                                    <input
+                                        type="text"
+                                        className="w-full bg-brand-dark border border-brand-light/10 rounded-lg px-4 py-3 focus:border-brand-teal focus:outline-none"
+                                        placeholder="e.g. files/news/your_image.jpg — upload images manually to files/news/"
+                                        value={newItem.imageUrl}
+                                        onChange={e => setNewItem({...newItem, imageUrl: e.target.value})}
+                                    />
+                                    <p className="text-xs text-brand-light/50 mt-2">Images must be uploaded manually to <code className="bg-black/30 px-1 rounded">files/news/</code>. Use the path <code className="bg-black/30 px-1 rounded">files/news/your_image.jpg</code> when referencing images.</p>
                                 </div>
                             </div>
 
@@ -258,7 +243,7 @@ const NewsManager: React.FC<NewsManagerProps> = ({ news, setNews }) => {
                                 <p className="text-brand-light/60 text-sm mb-4 line-clamp-2">{item.description}</p>
                                 <div className="flex justify-between items-center border-t border-brand-light/5 pt-4">
                                     <span className="text-xs text-brand-light/40 flex items-center gap-1">
-                                        <Calendar size={12} /> {item.date}
+                                        <Calendar size={12} /> {new Date(item.date).toLocaleDateString()}
                                     </span>
                                     <button onClick={() => handleDelete(item.id)} className="text-brand-pink/60 hover:text-brand-pink text-xs font-bold uppercase tracking-wider">
                                         Delete

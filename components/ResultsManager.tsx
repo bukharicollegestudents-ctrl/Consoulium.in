@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TeamResult } from '../types';
 import { Save, Plus, Trash2, Trophy, Star, Medal, Crown, Grid, Layout } from 'lucide-react';
-import { db, ref, set } from '../firebase';
+import { db, ref, set, remove } from '../firebase';
 
 interface ResultsManagerProps {
     teams: TeamResult[];
@@ -17,9 +17,13 @@ const ResultsManager: React.FC<ResultsManagerProps> = ({ teams, setTeams, consou
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [editForm, setEditForm] = useState<Partial<TeamResult>>({});
 
-    // Generic Firebase Update
+    // Generic IndexedDB Update
     const updateFirebase = (path: string, newTeams: TeamResult[]) => {
-        set(ref(db, path), newTeams);
+        set(ref(db, path), newTeams)
+            .catch(error => {
+                console.error("Error updating data:", error);
+                alert("Failed to update data");
+            });
     };
 
     const handleEdit = (team: TeamResult) => {
@@ -128,7 +132,7 @@ const ResultsManager: React.FC<ResultsManagerProps> = ({ teams, setTeams, consou
                                             <input 
                                                 autoFocus
                                                 type="text" 
-                                                value={editForm.name} 
+                                                value={editForm.name || ''} 
                                                 onChange={e => setEditForm({...editForm, name: e.target.value})}
                                                 className="flex-1 bg-brand-charcoal border border-brand-teal/30 rounded px-3 py-2 text-brand-light focus:outline-none focus:border-brand-yellow transition-all"
                                                 placeholder="Team Name"
@@ -137,7 +141,7 @@ const ResultsManager: React.FC<ResultsManagerProps> = ({ teams, setTeams, consou
                                         <div className="flex gap-2">
                                             {viewMode === 'campus' && (
                                                 <select
-                                                    value={editForm.campus}
+                                                    value={editForm.campus || 'Campus 1'}
                                                     onChange={e => setEditForm({...editForm, campus: e.target.value})}
                                                     className="bg-brand-charcoal border border-brand-teal/30 rounded px-3 py-2 text-brand-light text-sm focus:outline-none focus:border-brand-yellow w-1/3 transition-all"
                                                 >
@@ -147,8 +151,8 @@ const ResultsManager: React.FC<ResultsManagerProps> = ({ teams, setTeams, consou
                                             )}
                                             <input 
                                                 type="number" 
-                                                value={editForm.points} 
-                                                onChange={e => setEditForm({...editForm, points: parseInt(e.target.value)})}
+                                                value={editForm.points || 0} 
+                                                onChange={e => setEditForm({...editForm, points: parseInt(e.target.value) || 0})}
                                                 className="flex-1 bg-brand-charcoal border border-brand-teal/30 rounded px-3 py-2 text-brand-light focus:outline-none focus:border-brand-yellow font-pixel tracking-widest transition-all"
                                                 placeholder="Pts"
                                             />

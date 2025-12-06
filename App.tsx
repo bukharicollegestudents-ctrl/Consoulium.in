@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { NewsItem, FestivalStats } from './types';
+import { db, ref, onValue } from './firebase';
+import PublicSite from './components/PublicSite';
 import Sidebar from './components/Sidebar';
 import StatsCard from './components/StatsCard';
-import ResultsManager from './components/ResultsManager';
 import NewsManager from './components/NewsManager';
-import PublicSite from './components/PublicSite';
 import FullLeaderboard from './components/FullLeaderboard';
-import { TeamResult, NewsItem, FestivalStats } from './types';
-import { Users, Calendar, Trophy, Zap, ArrowLeft, Lock, X, Star, Medal, Crown } from 'lucide-react';
-import { db, ref, onValue } from './firebase';
+import { Users, Calendar, Trophy, Zap, ArrowLeft, Lock, X } from 'lucide-react';
 
 const App: React.FC = () => {
     // view state: 'public', 'admin', or 'leaderboard'
@@ -26,62 +25,27 @@ const App: React.FC = () => {
         totalCompetitors: 600
     });
 
-    const [teams, setTeams] = useState<TeamResult[]>([]);
-    const [consouliumTeams, setConsouliumTeams] = useState<TeamResult[]>([]);
     const [news, setNews] = useState<NewsItem[]>([]);
 
-    // Fetch Data from Firebase on Load (Single source of truth)
+    // Fetch Data from IndexedDB on Load (Single source of truth)
     useEffect(() => {
-        // 1. Regular Teams (Campus/Categories)
-        const teamsRef = ref(db, 'teams');
-        const unsubscribeTeams = onValue(teamsRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                const rawData = Array.isArray(data) ? data : Object.values(data);
-                // Sanitize: Ensure unique string IDs for all teams. Handle '0' correctly.
-                const processedTeams = rawData.map((t: any, i: number) => ({
-                    ...t,
-                    id: (t.id !== undefined && t.id !== null) ? String(t.id) : `gen_id_${Date.now()}_${i}`
-                })) as TeamResult[];
-                setTeams(processedTeams);
-            } else {
-                setTeams([]);
-            }
-        });
-
-        // 2. Consoulium Teams (Separate Backend Path)
-        const consouliumRef = ref(db, 'consoulium_teams');
-        const unsubscribeConsoulium = onValue(consouliumRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                const rawData = Array.isArray(data) ? data : Object.values(data);
-                // Sanitize Consoulium teams too
-                const processedTeams = rawData.map((t: any, i: number) => ({
-                    ...t,
-                    id: (t.id !== undefined && t.id !== null) ? String(t.id) : `gen_c_id_${Date.now()}_${i}`
-                })) as TeamResult[];
-                setConsouliumTeams(processedTeams);
-            } else {
-                setConsouliumTeams([]);
-            }
-        });
-
-        // 3. News
+        // 1. News
         const newsRef = ref(db, 'news');
         const unsubscribeNews = onValue(newsRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                const newsArray = Object.values(data) as NewsItem[];
-                newsArray.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                setNews(newsArray);
+                const newsArray = Array.isArray(data) ? data : Object.values(data);
+                // Sort by date (newest first)
+                const sortedNews = [...newsArray].sort((a: any, b: any) => 
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                );
+                setNews(sortedNews as NewsItem[]);
             } else {
                 setNews([]);
             }
         });
 
         return () => {
-            unsubscribeTeams();
-            unsubscribeConsoulium();
             unsubscribeNews();
         };
     }, []);
@@ -109,43 +73,8 @@ const App: React.FC = () => {
         setActiveTab('dashboard');
     };
 
-    // Helper to calculate leading team (Overall)
-    const leadingTeam = teams.length > 0 
-        ? [...teams].sort((a, b) => b.points - a.points)[0] 
-        : { name: 'No Data', points: 0 };
-
     // --- RENDER ADMIN PANEL ---
     const renderAdminPanel = () => {
-        const renderDashboardList = (category: string, icon: any, color: string) => (
-            <div className={`bg-brand-charcoal border border-${color}/20 rounded-2xl p-6 animate-scale-in`}>
-                <h3 className={`font-bold text-xl mb-6 flex items-center gap-2 text-${color}`}>
-                    {React.createElement(icon, { size: 20 })} {category} Leaderboard
-                </h3>
-                <div className="space-y-4">
-                    {teams.filter(t => t.category === category).length === 0 ? (
-                        <p className="text-brand-light/50 text-center py-4">No data available...</p>
-                    ) : (
-                        [...teams].filter(t => t.category === category).sort((a,b) => b.points - a.points).slice(0, 3).map((team, idx) => (
-                            <div 
-                                key={team.id} 
-                                className="flex items-center justify-between p-4 bg-brand-dark/50 rounded-xl border border-brand-light/5 hover:border-brand-light/20 transition-colors animate-slide-up"
-                                style={{ animationDelay: `${idx * 100}ms` }}
-                            >
-                                <div className="flex items-center gap-4">
-                                    <span className="font-pixel text-2xl text-brand-light/30 w-8">#{idx + 1}</span>
-                                    <div>
-                                        <div className="font-medium text-lg">{team.name}</div>
-                                        <div className="text-[10px] text-brand-light/40 uppercase tracking-wider">{team.campus === 'Campus 1' ? 'C1' : 'C2'}</div>
-                                    </div>
-                                </div>
-                                <span className={`font-pixel text-xl text-${color}`}>{team.points} pts</span>
-                            </div>
-                        ))
-                    )}
-                </div>
-            </div>
-        );
-
         const renderContent = () => {
             switch(activeTab) {
                 case 'dashboard':
@@ -156,27 +85,25 @@ const App: React.FC = () => {
                                 <p className="text-brand-light/60 animate-slide-down" style={{animationDelay: '100ms'}}>Welcome back, Admin. Here's what's happening at Consoulium.</p>
                             </div>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <StatsCard title="Days Remaining" value={stats.daysLeft} icon={Calendar} colorClass="text-brand-yellow" trend="On Schedule" />
                                 <StatsCard title="Active Events" value={stats.totalEvents} icon={Zap} colorClass="text-brand-teal" />
                                 <StatsCard title="Total Competitors" value={stats.totalCompetitors} icon={Users} colorClass="text-brand-pink" trend="+12% this week" />
-                                <StatsCard title="Leading Team" value={leadingTeam.name} icon={Trophy} colorClass="text-brand-orange" trend={`${leadingTeam.points} Pts`} />
-                            </div>
-
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                {renderDashboardList('Sub Junior', Star, 'brand-teal')}
-                                {renderDashboardList('Junior', Medal, 'brand-pink')}
-                                {renderDashboardList('Senior', Crown, 'brand-orange')}
                             </div>
                         </div>
                     );
                 case 'results': 
-                    return <ResultsManager 
-                        teams={teams} 
-                        setTeams={setTeams} 
-                        consouliumTeams={consouliumTeams}
-                        setConsouliumTeams={setConsouliumTeams}
-                    />;
+                    // Return a simplified results manager since we removed team tables
+                    return (
+                        <div className="text-center py-20">
+                            <Trophy size={64} className="mx-auto mb-4 text-brand-light/20" />
+                            <h3 className="text-2xl font-bold text-brand-light mb-2">Results Management</h3>
+                            <p className="text-brand-light/60 max-w-md mx-auto">
+                                Team management has been removed from this version. 
+                                You can manage events and news content through the respective tabs.
+                            </p>
+                        </div>
+                    );
                 case 'news': return <NewsManager news={news} setNews={setNews} />;
                 default: return <div className="p-10 text-center text-brand-light/50">Feature Coming Soon</div>;
             }
@@ -207,14 +134,14 @@ const App: React.FC = () => {
         <>
             {/* View Switching */}
             {view === 'leaderboard' && (
-                <FullLeaderboard teams={teams} onBack={() => setView('public')} />
+                <FullLeaderboard teams={[]} onBack={() => setView('public')} />
             )}
 
             {view === 'public' && (
                 <div className="animate-fade-in">
                     <PublicSite 
-                        teams={teams} 
-                        consouliumTeams={consouliumTeams}
+                        teams={[]} 
+                        consouliumTeams={[]}
                         news={news} 
                         onLoginClick={() => {
                             if (isAuthenticated) {

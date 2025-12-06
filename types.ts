@@ -15,6 +15,23 @@ export interface NewsItem {
     date: string;
 }
 
+export interface EventItem {
+    id: string;
+    title: string;
+    description: string;
+    venue: string;
+    startTime: string;
+    endTime: string;
+    category: string;
+    imageUrl: string;
+    organizer: string;
+    contactEmail: string;
+    registrationRequired: boolean;
+    registrationLink: string;
+    capacity: number;
+    createdAt: string;
+}
+
 export interface FestivalStats {
     daysLeft: number;
     totalEvents: number;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TeamResult, NewsItem } from '../types';
+
 import {
     ArrowRight, Calendar, MapPin, Clock, School, ChevronDown, Menu,
     ArrowUpRight, X, Bot, Mic, MessageSquare, Ticket, Medal,
@@ -39,9 +40,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
     const juniorTop = teams.filter(t => t.category === 'Junior').sort((a, b) => b.points - a.points).slice(0, 3);
 
     const heroVideos = [
-        "video/highlites_3.mp4",
-        "video/highlites_2.mp4",
-        "video/highlites 1.mp4"
+        "/dist/video/highlites 1.mp4",
+        "/dist/video/highlites_2.mp4",
+        "/dist/video/highlites_3.mp4"
     ];
 
     // --- EFFECTS & ANIMATIONS ---
@@ -304,7 +305,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                 <div className="container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
                     <a href="#" className="flex items-center gap-3 group">
                         <div className="w-10 h-10 relative flex items-center justify-center bg-brand-light/10 rounded-lg overflow-hidden border border-brand-teal/30 group-hover:border-brand-yellow/50 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-[0_0_15px_rgba(233,196,106,0.4)]">
-                            <img src="image/conso_lofgo[1].png" alt="Consoulium Logo" className="w-full h-full object-cover" />
+                            <img src="/dist/image/logo/conso_lofgo[1].png" alt="Consoulium Logo" className="w-full h-full object-cover" />
                         </div>
                         <span className="font-sans text-2xl font-bold tracking-tighter text-brand-light group-hover:text-brand-yellow transition-colors duration-300">Consoulium</span>
                     </a>
@@ -324,17 +325,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                                 </div>
                             </div>
                         </div>
-                        <button 
-                            onClick={() => window.location.href = "/results/leaderboard.html"} 
-                            className="bg-brand-yellow text-brand-charcoal hover:bg-brand-orange hover:text-white border border-transparent shadow-sm h-11 px-8 text-base inline-flex items-center justify-center rounded-full font-medium transition-all duration-300 active:scale-95 font-bold gap-2 shadow-[0_0_15px_rgba(233,196,106,0.3)]"
-                        >
-                            LIVE RESULTS <ArrowRight size={16} />
-                        </button>
+                        
                     </nav>
 
-                    <button className="md:hidden p-2 text-brand-light" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                        <Menu size={24} />
-                    </button>
                 </div>
 
                 {/* Mobile Menu */}
@@ -343,20 +336,21 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="p-6 flex flex-col gap-6">
                             <a href="#" className="text-xl font-medium text-brand-light" onClick={() => setMobileMenuOpen(false)}>Home</a>
                             <a href="#about" className="text-xl font-medium text-brand-light/80" onClick={() => setMobileMenuOpen(false)}>About</a>
-                            <button 
-                                onClick={() => {
-                                    setMobileMenuOpen(false);
-                                    if (onViewLeaderboard) onViewLeaderboard();
-                                }} 
-                                className="bg-brand-yellow text-brand-charcoal h-11 px-8 rounded-full font-bold w-full flex items-center justify-center gap-2"
-                            >
-                                LIVE RESULTS <ArrowRight size={16} />
-                            </button>
+                            
+                            {/* Mobile Explore Dropdown */}
+                            <div className="flex flex-col gap-2">
+                                <a href="#results" className="text-xl font-medium text-brand-light/80" onClick={() => setMobileMenuOpen(false)}>Results</a>
+                                <a href="#news" className="text-xl font-medium text-brand-light/80" onClick={() => setMobileMenuOpen(false)}>News</a>
+                                <a href="#events" className="text-xl font-medium text-brand-light/80" onClick={() => setMobileMenuOpen(false)}>Events</a>
+                            </div>
+                            
+                            
+                            
+                            
                         </div>
                     </div>
                 )}
             </header>
-
             {/* Hero Section */}
             <section className="relative px-4 md:px-6 py-6 md:py-8">
                 <div id="hero-container" className="relative w-full h-[650px] md:h-[85vh] min-h-[600px] rounded-[2rem] md:rounded-[3rem] overflow-hidden group border-4 border-brand-teal/20 bg-brand-charcoal shadow-2xl">
@@ -381,7 +375,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-brand-charcoal/60 backdrop-blur-md border border-brand-light/20 flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300">
                             <img
                                 className="w-full h-full object-contain p-4"
-                                src="/image/logo[1].png"
+                                src="/dist/image/logo/logo[1].png"
                                 alt="Company Logo"
                             />
                         </div>
@@ -413,13 +407,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                                         meticulously crafted under the auspices of the Students’ Association of Bukhari
                                         Islamic Da'wa College (SABIC).
                                     </p>
-                                    <button 
-                                        onClick={onViewLeaderboard} 
-                                        className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 bg-brand-yellow text-brand-charcoal hover:bg-brand-orange hover:text-white px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(233,196,106,0.4)] hover:shadow-[0_0_30px_rgba(244,162,97,0.6)] flex items-center gap-3 transform hover:-translate-y-1 transition-all group"
-                                    >
-                                        <span>Check Result</span>
-                                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                                    </button>
+                            
                                 </div>
                             </div>
                         </div>
@@ -475,57 +463,41 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-                        {/* Card 1: Consoulium Result (Distinct Backend) */}
-                        <div className="bg-brand-charcoal border border-brand-teal/30 p-8 md:p-10 rounded-[2.5rem] shadow-2xl hover:border-brand-yellow/50 transition-all duration-300 group">
+                        {/* Iframe Preview of Consoulium Candidate Form */}
+                        <div className="bg-brand-charcoal border border-brand-teal/30 p-8 md:p-10 rounded-[2.5rem] shadow-2xl hover:border-brand-yellow/50 transition-all duration-300 group md:col-span-2">
                             <div className="flex items-center justify-between mb-8">
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-full bg-brand-teal/20 flex items-center justify-center text-brand-teal border border-brand-teal/30">
                                         <School size={24} />
                                     </div>
-                                    <h3 className="text-3xl font-bold text-brand-light">Consoulium <span className="font-pixel text-brand-yellow">Result</span></h3>
+                                    <h3 className="text-3xl font-bold text-brand-light">Student <span className="font-pixel text-brand-yellow">Portal</span></h3>
                                 </div>
-                                <span className="px-4 py-1 rounded-full bg-brand-teal/20 text-brand-teal text-sm font-bold border border-brand-teal/30 animate-pulse">LIVE</span>
+                                <span className="px-4 py-1 rounded-full bg-brand-teal/20 text-brand-teal text-sm font-bold border border-brand-teal/30 animate-pulse">LIVE PREVIEW</span>
                             </div>
-                            <div className="space-y-4">
-                                {consouliumTop.length > 0 ? consouliumTop.map((team, idx) => (
-                                    <div key={team.id} className="bg-brand-dark/50 p-4 rounded-xl border border-brand-light/5 flex justify-between items-center">
-                                        <span className="text-brand-light/80 font-medium">#{idx + 1} {team.name}</span>
-                                        <span className="text-brand-yellow font-pixel text-xl">{team.points} Pts</span>
-                                    </div>
-                                )) : <div className="text-center text-brand-light/40 py-4">No Data Available</div>}
+                            
+                            <div className="mb-6">
+                                <p className="text-brand-light/80 mb-4">
+                                    Preview of the student candidate portal where participants can register and view results.
+                                </p>
                             </div>
-                            <a href="https://offcampus.festie.app/candidate" target="_blank" rel="noopener noreferrer" className="w-full mt-8 py-4 rounded-xl bg-brand-teal/10 hover:bg-brand-teal text-brand-teal hover:text-white border border-brand-teal/30 transition-all font-bold flex items-center justify-center gap-2">
-                                Quick Result <ArrowRight size={16} />
-                            </a>
-                        </div>
-
-                        {/* Card 2: Campus Junior (Replaces Campus 2 with Junior Category) */}
-                        <div className="bg-brand-charcoal border border-brand-pink/30 p-8 md:p-10 rounded-[2.5rem] shadow-2xl hover:border-brand-yellow/50 transition-all duration-300 group">
-                            <div className="flex items-center justify-between mb-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-brand-pink/20 flex items-center justify-center text-brand-pink border border-brand-pink/30">
-                                        <School size={24} />
-                                    </div>
-                                    <h3 className="text-3xl font-bold text-brand-light">Campus <span className="font-pixel text-brand-yellow">Junior</span></h3>
-                                </div>
-                                <span className="px-4 py-1 rounded-full bg-brand-pink/20 text-brand-pink text-sm font-bold border border-brand-pink/30 animate-pulse">LIVE</span>
+                            
+                            <div className="rounded-xl overflow-hidden border border-brand-light/10 shadow-lg h-[500px]">
+                                <iframe 
+                                    src="https://consouium.festie.app/candidate" 
+                                    title="Consoulium Candidate Portal"
+                                    className="w-full h-full"
+                                    sandbox="allow-scripts allow-same-origin allow-forms"
+                                    loading="lazy"
+                                ></iframe>
                             </div>
-                            <div className="space-y-4">
-                                {juniorTop.length > 0 ? juniorTop.map((team, idx) => (
-                                    <div key={team.id} className="bg-brand-dark/50 p-4 rounded-xl border border-brand-light/5 flex justify-between items-center">
-                                        <span className="text-brand-light/80 font-medium">#{idx + 1} {team.name}</span>
-                                        <span className="text-brand-pink font-pixel text-xl">{team.points} Pts</span>
-                                    </div>
-                                )) : <div className="text-center text-brand-light/40 py-4">No Data Available</div>}
-                            </div>
-                            <button 
-                                onClick={onViewLeaderboard} 
-                                className="w-full mt-8 py-4 rounded-xl bg-brand-pink/10 hover:bg-brand-pink text-brand-pink hover:text-white border border-brand-pink/30 transition-all font-bold flex items-center justify-center gap-2"
+                            
+                            <a 
+                                href="https://consouium.festie.app/candidate" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="w-full mt-8 py-4 rounded-xl bg-brand-teal/10 hover:bg-brand-teal text-brand-teal hover:text-white border border-brand-teal/30 transition-all font-bold flex items-center justify-center gap-2"
                             >
-                                View Full Leaderboard <ArrowRight size={16} />
-                            </button>
-                            <a href="https://offcampus.festie.app/candidate" target="_blank" rel="noopener noreferrer" className="w-full mt-4 py-4 rounded-xl bg-brand-pink/10 hover:bg-brand-pink text-brand-pink hover:text-white border border-brand-pink/30 transition-all font-bold flex items-center justify-center gap-2">
-                                Quick Result <ArrowRight size={16} />
+                                Open Full Portal <ArrowRight size={16} />
                             </a>
                         </div>
                     </div>
@@ -594,7 +566,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                                     <img src={item.imageUrl} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={item.title} />
                                 </div>
                                 <h3 className="text-2xl font-medium mb-3 text-brand-light group-hover:text-brand-yellow transition-colors">{item.title}</h3>
-                                <p className="text-brand-light/60 leading-relaxed text-sm mb-6 flex-grow line-clamp-3">{item.description}</p>
+                                <div className="text-brand-light/60 leading-relaxed text-sm mb-6 flex-grow line-clamp-3" dangerouslySetInnerHTML={{ __html: item.description }} />
                                 <div className="mt-auto text-brand-teal text-sm font-bold uppercase tracking-widest flex items-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                                     Read More <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                                 </div>
@@ -666,7 +638,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="bg-brand-charcoal border border-brand-light/10 p-8 rounded-[2rem] flex flex-col justify-between h-full min-h-[300px] hover:-translate-y-2 transition-transform duration-300 hover:border-brand-pink/30">
                             <p className="text-lg leading-relaxed mb-8 font-medium text-brand-light/80">"Consoulium has become an integral part of our institution's vision for holistic education, bridging tradition and modernity."</p>
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="image/profiles/THENNALA USTHAD.jpg" alt="Principal" className="w-full h-full object-cover" /></div>
+                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/dist/image/profiles/THENNALA USTHAD.jpg" alt="Principal" className="w-full h-full object-cover" /></div>
                                 <div><h4 className="font-bold text-base text-brand-light">Aboohaneefal Faizy Thennala</h4><span className="text-xs text-brand-light/50 uppercase tracking-wide">Principal</span></div>
                             </div>
                         </div>
@@ -674,7 +646,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="bg-brand-charcoal border border-brand-light/10 p-8 rounded-[2rem] flex flex-col justify-between h-full min-h-[300px] hover:-translate-y-2 transition-transform duration-300 hover:border-brand-pink/30">
                             <p className="text-lg leading-relaxed mb-8 font-medium text-brand-light/80">"This festival has enhanced student development, especially in public speaking and critical thinking."</p>
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="image/profiles/Dr. V Abdul Latheef.jpeg" alt="Head" className="w-full h-full object-cover" /></div>
+                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/dist/image/profiles/Dr. V Abdul Latheef.jpeg" alt="Head" className="w-full h-full object-cover" /></div>
                                 <div><h4 className="font-bold text-base text-brand-light">Dr. V Abdul Latheef</h4><span className="text-xs text-brand-light/50 uppercase tracking-wide">Academic Head</span></div>
                             </div>
                         </div>
@@ -682,7 +654,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="bg-brand-charcoal border border-brand-light/10 p-8 rounded-[2rem] flex flex-col justify-between h-full min-h-[300px] hover:-translate-y-2 transition-transform duration-300 hover:border-brand-pink/30">
                             <p className="text-lg leading-relaxed mb-8 font-medium text-brand-light/80">"I am impressed by how Consoulium has created a platform for students to express themselves."</p>
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="image/profiles/farooq ust.jpg" alt="Alumni" className="w-full h-full object-cover" /></div>
+                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/dist/image/profiles/farooq ust.jpg" alt="Alumni" className="w-full h-full object-cover" /></div>
                                 <div><h4 className="font-bold text-base text-brand-light">Dr. PA Muhammed Farooq</h4><span className="text-xs text-brand-light/50 uppercase tracking-wide">Alumni</span></div>
                             </div>
                         </div>
@@ -690,7 +662,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="bg-brand-charcoal border border-brand-light/10 p-8 rounded-[2rem] flex flex-col justify-between h-full min-h-[300px] hover:-translate-y-2 transition-transform duration-300 hover:border-brand-pink/30">
                             <p className="text-lg leading-relaxed mb-8 font-medium text-brand-light/80">"The program has not only honed our students' academic abilities but also cultivated their ethical reasoning."</p>
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="image/profiles/OLAVATTUR USTHAD.jpg" alt="Vice" className="w-full h-full object-cover" /></div>
+                                <div className="w-12 h-12 rounded-full bg-brand-light/20 overflow-hidden"><img src="/dist/image/profiles/OLAVATTUR USTHAD.jpg" alt="Vice" className="w-full h-full object-cover" /></div>
                                 <div><h4 className="font-bold text-base text-brand-light">Abdul Naswir Ahsani</h4><span className="text-xs text-brand-light/50 uppercase tracking-wide">Vice Principal</span></div>
                             </div>
                         </div>
@@ -709,10 +681,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                             </a>
                         </div>
                         <div className="flex gap-6">
-                            <a href="#" className="hover:text-brand-yellow transition-colors"><Instagram size={24} /></a>
-                            <a href="#" className="hover:text-brand-yellow transition-colors"><Youtube size={24} /></a>
-                            <a href="#" className="hover:text-brand-yellow transition-colors"><Facebook size={24} /></a>
-                            <a href="#" className="hover:text-brand-yellow transition-colors"><Twitter size={24} /></a>
+                            <a href="https://share.google/p2RIQwUeOsp7n0TAT" className="hover:text-brand-yellow transition-colors"><Instagram size={24} /></a>
+                            <a href="https://share.google/B7wsnO6tdckiT4BrB" className="hover:text-brand-yellow transition-colors"><Youtube size={24} /></a>
+                            <a href="https://share.google/xb6t25ic91X6UBaGk" className="hover:text-brand-yellow transition-colors"><Facebook size={24} /></a>
                         </div>
                     </div>
 
@@ -823,9 +794,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                             <h3 className="text-3xl md:text-4xl font-bold leading-tight text-brand-light mb-8">{selectedNews.title}</h3>
 
                             <div className="prose prose-lg prose-invert max-w-none">
-                                <p className="text-brand-light/80 leading-relaxed whitespace-pre-wrap text-lg">
-                                    {selectedNews.description}
-                                </p>
+                                <div className="text-brand-light/80 leading-relaxed whitespace-pre-wrap text-lg" dangerouslySetInnerHTML={{ __html: selectedNews.description }} />
                             </div>
 
                             <div className="mt-12 pt-8 border-t border-brand-light/10 flex justify-between items-center">
