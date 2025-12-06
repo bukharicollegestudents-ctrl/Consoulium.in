@@ -305,7 +305,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                 <div className="container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
                     <a href="#" className="flex items-center gap-3 group">
                         <div className="w-10 h-10 relative flex items-center justify-center bg-brand-light/10 rounded-lg overflow-hidden border border-brand-teal/30 group-hover:border-brand-yellow/50 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-[0_0_15px_rgba(233,196,106,0.4)]">
-                            <img src="/dist/image/logo/conso_lofgo[1].png" alt="Consoulium Logo" className="w-full h-full object-cover" />
+                            <img src="dist/image/logo/logo-mik.png" alt="Consoulium Logo" className="w-full h-full object-cover" />
                         </div>
                         <span className="font-sans text-2xl font-bold tracking-tighter text-brand-light group-hover:text-brand-yellow transition-colors duration-300">Consoulium</span>
                     </a>
@@ -375,7 +375,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ teams, consouliumTeams, news, o
                         <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-brand-charcoal/60 backdrop-blur-md border border-brand-light/20 flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300">
                             <img
                                 className="w-full h-full object-contain p-4"
-                                src="/dist/image/logo/logo[1].png"
+                                src="dist/image/logo/logo-new.png"
                                 alt="Company Logo"
                             />
                         </div>
